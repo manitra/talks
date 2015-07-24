@@ -1,31 +1,25 @@
 # Dependency Injection
-Build complicated apps with ease.
+Build complicated apps with ease
 
 ===
 
-## Presentation
-
-===
-
-### What is Dependency Injection?
+## What is Dependency Injection?
 
 
-
-#### Without Dependency Injection
+### Without Dependency Injection
 
 	class PageWordCounter {
-		int Count(string url) {
-			var http = new HttpRequest(url);
+		int Count(string documentUrl) {
+			var http = new HttpRequest();
 			return http
-				.DownloadString()
+				.DownloadString(documentUrl)
 				.Split(" ")
 				.Count();
 		}
 	}
 
 
-
-#### With Dependency Injection
+### With Dependency Injection
 
 	class WordCounter {
 		int Count(string documentUrl, HttpRequest http) {
@@ -38,66 +32,158 @@ Build complicated apps with ease.
 
 ===
 
-### Why would we want Dependency Injection?
+## Bad things without DI?
 
-By default developers just spawn what they need
+
+### Developers just `new` things
 
 	class PageWordCounter {
-		int Count(string url) {
-			var http = new HttpRequest(url);
+		int Count(string documentUrl) {
+			var http = new HttpRequest();
 			http.Proxy = SystemConfiguration.DefaultProxy;
 			http.Credentials = CredentialsCache.DefaultCredentials;
 			return http
-				.DownloadString()
+				.DownloadString(documentUrl)
 				.Split(" ")
 				.Count();
 		}
 	}
 
 
-It increases the amount of code inside each classes.
-- instantiate HttpRequest
-- http credentials
+### Increases the amount of code
+- `new HttpRequest`
+- credentials
 - proxy
 - proxy credentials
 ...
 (there are potentially a dozens of parameters)
 
 
-It defocus the class from its unique goal (Counting the words)
+### Defocuses the class from its job (Counting the words)
 - Code about HttpRequest
 - Code about Proxy
 - Code about credentials
 
+===
 
-With Dependency Injection, your classes focus
-- smaller
-- easier to maintain
-- testable without their dependency
+## Good things with Dependency Injection
+
+
+### Focus Fire!
+No code about the `http` dependency
+
+It's **ready to use** out of the box
+
+	class WordCounter {
+		int Count(string documentUrl, HttpRequest http) {
+			return http
+				.DownloadString(documentUrl)
+				.Split(" ")
+				.Count();
+		}
+	}
+
+
+### Easy maintenance
+Every class has its job and is easy to maintain
+ 
+ qsdf | qsdf 
+ --------
+ qsdf|sdf
+a|2
+
+	class HttpRequestFactory {
+		HttpRequest Create() {
+			var result = new HttpRequest();
+			// ... configure the request
+			return result;
+		}
+	}
+
+	class HttpRequestFactory {
+		HttpRequest Create() {
+			var result = new HttpRequest();
+			// ... configure the request
+			return result;
+		}
+	}
+
+
+Configuration
+
+	class HttpRequestFactory {
+		HttpRequest Create() {
+			var result = new HttpRequest();
+			result.Credentials = CredentialsCache.DefaultCredentials;
+			result.Proxy = SystemConfig.DefaultProxy;
+			result.Timeout = TimeSpan.FromSeconds(120);
+			return result;
+		}
+	}
+
+
+### Testable without their dependency
 
 ===
 
-### How do we do it in a real life App
+## How do we do it in a real life App
 - Manually configure dependencies
 - IoC Containers
 
+
+### Method injection
+
+	class WordCounter {
+		int Count(string documentUrl, HttpRequest http) {
+			return http
+				.DownloadString(documentUrl)
+				.Split(" ")
+				.Count();
+		}
+	}
+
+
+### Constructor injection
+
+	class WordCounter {
+		private HttpRequest http;
+
+		public WordCounter(HttpRequest http) {
+			this.http = http;
+		}
+
+		int Count(string documentUrl) {
+			return this.http
+				.DownloadString(documentUrl)
+				.Split(" ")
+				.Count();
+		}
+	}
+
+
+### Property injection
+
+	class WordCounter {
+		public HttpRequest Http { get; set; }
+
+		int Count(string documentUrl) {
+			return Http
+				.DownloadString(documentUrl)
+				.Split(" ")
+				.Count();
+		}
+	}
+
 ===
 
-### Full example
+## Full example
 
 
-## Workshop
+# Workshop
 
 
-### qsdfqsdf
-
-
-### azeaze
-
-
-### mlkmlk
-
-
-
+===
 
 # Thank you
+- https://github.com/manitra/talks/tree/master/dependency-injection
+- 
