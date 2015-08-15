@@ -234,11 +234,12 @@ Note:
 ===
 
 # Workshop
-Have your laptop ready!
-- git clone https://github.com/manitra/talks/tree/master/dependency-injection
+- git clone https://github.com/manitra/pfx-brute-force.git
 
 ===
 
 # Thank you
+
+- **Criteo** is **Cool** and hiring: vn-hiring@criteo.com
 - https://github.com/manitra/talks/tree/master/dependency-injection
 - http://www.castleproject.org/projects/windsor/
